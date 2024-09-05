@@ -35,7 +35,7 @@ public class Particion {
         this.ocupada = ocupada;
     }
 
-    // Método toString para mostrar información de la partición
+
     @Override
     public String toString() {
         return "Particion{" +

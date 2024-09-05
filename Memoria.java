@@ -12,19 +12,17 @@ public class Memoria {
         this.particiones = new ArrayList<>();
     }
 
-    // Método para agregar una partición
+
     public void agregarParticion(Particion particion) {
         particiones.add(particion);
     }
 
-    // Métodos para gestionar la asignación de memoria (Ej. First-Fit, Best-Fit, etc.)
+// asignación de memoria  First-Fit, Best-Fit
     public Particion asignarMemoria(Trabajo trabajo, String estrategia) {
-        // Implementar lógica de asignación según la estrategia seleccionada (First-Fit, Best-Fit, etc.)
-        // ...
-        return null; // Retornar la partición asignada o null si no hay partición disponible
+  
+        return null; 
     }
 
-    // Método para liberar memoria
     public void liberarMemoria(int idParticion) {
         for (Particion particion : particiones) {
             if (particion.getId() == idParticion) {
@@ -34,7 +32,7 @@ public class Memoria {
         }
     }
 
-    // Obtener el estado actual de la memoria
+   
     public List<Particion> getParticiones() {
         return particiones;
     }
