@@ -5,16 +5,24 @@ public class Particion {
     private int direccionComienzo;
     private int tamaño;
     private boolean ocupada;
+    private EstrategiaAsignacion estrategiaActual;
 
-    // Constructor
+
+      public enum EstrategiaAsignacion {
+        FIRST_FIT,
+        BEST_FIT,
+        NEXT_FIT,
+        WORST_FIT
+    }
+    
     public Particion(int id, int direccionComienzo, int tamaño) {
         this.id = id;
         this.direccionComienzo = direccionComienzo;
         this.tamaño = tamaño;
-        this.ocupada = false; // Inicialmente, la partición está libre
+        this.ocupada = false; // false (libre)/ true(ocupada)
     }
 
-    // Getters y Setters
+    
     public int getId() {
         return id;
     }
@@ -26,6 +34,11 @@ public class Particion {
     public int getTamaño() {
         return tamaño;
     }
+
+    public void setTamaño(int tamaño){
+        this.tamaño = tamaño; 
+    }
+
 
     public boolean isOcupada() {
         return ocupada;

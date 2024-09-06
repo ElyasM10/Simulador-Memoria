@@ -1,37 +1,63 @@
-public class Trabajo {
-    private int id 
+public class Proceso {
+    private int id;
     private String nombre;
     private int memoriaRequerida; //Tamaño
     private int instanteArribo;
     private int duracion;
-    private int memoriaRequerida;
 
-    public Trabajo(int id;String nombre, int instanteArribo, int duracion, int memoriaRequerida) {
+
+    public Proceso(int id,String nombre,int memoriaRequerida,int duracion,int instanteArribo){
         this.id = id;
         this.nombre = nombre;
-        this.instanteArribo = instanteArribo;
-        this.duracion = duracion;
         this.memoriaRequerida = memoriaRequerida;
+        this.duracion = duracion;
+        this.instanteArribo = instanteArribo;
+
+
     }
     
     public int getID(){
         return id; 
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getNombre() {
         return nombre;
     }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
 
     public int getInstanteArribo() {
         return instanteArribo;
     }
 
+    public void setInstanteArribo(int instanteArribo) {
+        this.instanteArribo = instanteArribo;
+    }
+
+
+
     public int getDuracion() {
         return duracion;
     }
 
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
+    }
+
+
     public int getMemoriaRequerida() {
         return memoriaRequerida;
+    }
+
+    public void setMemoriaRequerida(int memoriaRequerida) {
+        this.memoriaRequerida = memoriaRequerida;
     }
 
     // toString 
