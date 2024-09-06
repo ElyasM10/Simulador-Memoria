@@ -1,18 +1,23 @@
 public class Trabajo {
+    private int id 
     private String nombre;
+    private int memoriaRequerida; //Tamaño
     private int instanteArribo;
-    private int duracionTotal;
+    private int duracion;
     private int memoriaRequerida;
 
-    // Constructor
-    public Trabajo(String nombre, int instanteArribo, int duracionTotal, int memoriaRequerida) {
+    public Trabajo(int id;String nombre, int instanteArribo, int duracion, int memoriaRequerida) {
+        this.id = id;
         this.nombre = nombre;
         this.instanteArribo = instanteArribo;
-        this.duracionTotal = duracionTotal;
+        this.duracion = duracion;
         this.memoriaRequerida = memoriaRequerida;
     }
+    
+    public int getID(){
+        return id; 
+    }
 
-    // Getters
     public String getNombre() {
         return nombre;
     }
@@ -21,8 +26,8 @@ public class Trabajo {
         return instanteArribo;
     }
 
-    public int getDuracionTotal() {
-        return duracionTotal;
+    public int getDuracion() {
+        return duracion;
     }
 
     public int getMemoriaRequerida() {
@@ -33,9 +38,10 @@ public class Trabajo {
     @Override
     public String toString() {
         return "Trabajo{" +
+                "id='"+id+
                 "nombre='" + nombre + '\'' +
                 ", instanteArribo=" + instanteArribo +
-                ", duracionTotal=" + duracionTotal +
+                ", duracion=" + duracion +
                 ", memoriaRequerida=" + memoriaRequerida +
                 '}';
     }
