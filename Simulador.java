@@ -1,4 +1,6 @@
 import Clases.Particion;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +17,7 @@ public class Simulador {
     private int tiempoSeleccion;
     private int tiempoCargaPromedio;
     private int tiempoLiberacion;
+    private Registro registro;
 
     public Simulador() {
         this.particiones = new ArrayList<>();
@@ -25,30 +28,43 @@ public class Simulador {
         this.tiempoCargaPromedio = 0;
         this.tiempoLiberacion = 0;
         this.asignador = new AsignacionMemoria(particiones);
+        try {
+            this.registro = new Registro("eventos.txt", "estado_particiones.txt");
+        } catch (IOException e) {
+            System.out.println("Error al crear los archivos de registro: " + e.getMessage());
+        }
     }
 
     public void simular() {
-
         Collections.sort(procesos, Comparator.comparingInt(Proceso::getInstanteArribo));
-
 
         for (Proceso proceso : procesos) {
             Particion particion = asignarParticion(proceso);
-
             if (particion != null) {
+                registro.registrarEvento("Asignada partición para el proceso: " + proceso.getNombre() +
+                        " - Partición ID: " + particion.getId() +
+                        " - Tiempo: " + proceso.getInstanteArribo());
+
                 cargarProceso(proceso);
                 liberarProceso(proceso, particion);
             } else {
-                System.out.println("No se pudo asignar el proceso: " + proceso.getNombre());
+                registro.registrarEvento("No se pudo asignar el proceso: " + proceso.getNombre() +
+                        " - Tiempo: " + proceso.getInstanteArribo());
             }
+            registro.registrarEstadoParticiones(particiones);
         }
-
 
         calcularIndicadores();
 
+        try {
+            registro.cerrar();
+        } catch (IOException e) {
+            System.out.println("Error al cerrar los archivos de registro: " + e.getMessage());
+        }
 
         imprimirResultados();
     }
+
 
     public Particion asignarParticion(Proceso proceso) {
         switch (estrategiaActual) {
@@ -92,8 +108,21 @@ public class Simulador {
 
 
     private void calcularIndicadores() {
+        int tiempoTotalRetorno = 0;
+        int cantidadProcesos = procesos.size();
 
-        System.out.println("Calculando indicadores de rendimiento...");
+        for (Proceso proceso : procesos) {
+            int tiempoRetorno = (proceso.getInstanteArribo() + proceso.getDuracion()) - proceso.getInstanteArribo();
+            tiempoTotalRetorno += tiempoRetorno;
+            System.out.printf("Proceso: %s, Tiempo de Retorno: %d%n", proceso.getNombre(), tiempoRetorno);
+        }
+
+        if (cantidadProcesos > 0) {
+            double tiempoMedioRetorno = (double) tiempoTotalRetorno / cantidadProcesos;
+            System.out.printf("Tiempo Medio de Retorno: %.2f%n", tiempoMedioRetorno);
+        } else {
+            System.out.println("No hay procesos para calcular el tiempo medio de retorno.");
+        }
     }
 
 

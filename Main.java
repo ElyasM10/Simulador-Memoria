@@ -9,21 +9,27 @@ import Clases.Particion;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        List<Proceso> listaProcesos = null;
+        boolean archivoCargadoExitosamente = false;
 
+        // Solicitar archivo hasta que sea cargado correctamente
+        while (!archivoCargadoExitosamente) {
+            System.out.println("Ingrese el nombre del archivo de texto (por ejemplo, tanda1.txt): ");
+            String nombreArchivo = scanner.nextLine();
 
-        System.out.println("Ingrese el nombre del archivo de texto (por ejemplo, tanda1.txt): ");
-        String nombreArchivo = scanner.nextLine();
+            imprimirContenidoArchivo(nombreArchivo);
+            listaProcesos = cargarProcesosDesdeArchivo(nombreArchivo);
 
+            if (listaProcesos != null && !listaProcesos.isEmpty()) {
+                archivoCargadoExitosamente = true;
+            } else {
+                System.out.println("No se pudo cargar el archivo. Por favor, inténtelo de nuevo.");
+            }
+        }
 
-        imprimirContenidoArchivo(nombreArchivo);
-
-
-        List<Proceso> listaProcesos = cargarProcesosDesdeArchivo(nombreArchivo);
-
-
+        // Crear el simulador y asignar los procesos cargados
         Simulador simulador = new Simulador();
         simulador.getProcesos().addAll(listaProcesos);
-
 
         System.out.println("Ingrese el tamaño de la memoria física disponible para usuarios (en unidades): ");
         int tamanioMemoria = scanner.nextInt();
@@ -31,7 +37,6 @@ public class Main {
 
         System.out.println("Seleccione la política de asignación (firstfit, bestfit, nextfit, worstfit): ");
         String politicaSeleccionada = scanner.nextLine().toLowerCase();
-
 
         switch (politicaSeleccionada) {
             case "firstfit":
@@ -61,12 +66,10 @@ public class Main {
         System.out.println("Ingrese el tiempo de liberación de partición (en unidades de tiempo): ");
         int tiempoLiberacion = scanner.nextInt();
 
-
         simulador.setTamanioMemoria(tamanioMemoria);
         simulador.setTiempoSeleccion(tiempoSeleccion);
         simulador.setTiempoCargaPromedio(tiempoCargaPromedio);
         simulador.setTiempoLiberacion(tiempoLiberacion);
-
 
         simulador.simular();
     }
@@ -88,15 +91,12 @@ public class Main {
         try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
             String linea;
             while ((linea = br.readLine()) != null) {
-                // Eliminar espacios en blanco al principio y al final de la línea
                 linea = linea.trim();
-                // Saltar líneas vacías
                 if (linea.isEmpty()) {
                     continue;
                 }
 
                 String[] datos = linea.split(",");
-                // Verificar que la línea tenga la cantidad esperada de campos
                 if (datos.length != 5) {
                     System.out.println("Línea en el archivo no válida: " + linea);
                     continue;
@@ -109,7 +109,6 @@ public class Main {
                     int duracion = Integer.parseInt(datos[3].trim());
                     int instanteArribo = Integer.parseInt(datos[4].trim());
 
-                    // Crear un nuevo proceso y agregarlo a la lista
                     Proceso proceso = new Proceso(id, nombre, memoriaRequerida, duracion, instanteArribo);
                     procesos.add(proceso);
                 } catch (NumberFormatException e) {
@@ -118,6 +117,7 @@ public class Main {
             }
         } catch (IOException e) {
             System.out.println("Error al leer el archivo: " + e.getMessage());
+            return null; // Retorna null en caso de error de lectura
         }
         return procesos;
     }
