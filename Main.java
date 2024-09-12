@@ -1,10 +1,10 @@
+import Clases.Particion;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import Clases.Particion;
 
 public class Main {
     public static void main(String[] args) {
@@ -39,22 +39,14 @@ public class Main {
         String politicaSeleccionada = scanner.nextLine().toLowerCase();
 
         switch (politicaSeleccionada) {
-            case "firstfit":
-                simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.FIRST_FIT);
-                break;
-            case "bestfit":
-                simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.BEST_FIT);
-                break;
-            case "nextfit":
-                simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.NEXT_FIT);
-                break;
-            case "worstfit":
-                simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.WORST_FIT);
-                break;
-            default:
+            case "firstfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.FIRST_FIT);
+            case "bestfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.BEST_FIT);
+            case "nextfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.NEXT_FIT);
+            case "worstfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.WORST_FIT);
+            default -> {
                 System.out.println("Política no reconocida. Se usará FIRST_FIT por defecto.");
                 simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.FIRST_FIT);
-                break;
+            }
         }
 
         System.out.println("Ingrese el tiempo de selección de partición (en unidades de tiempo): ");

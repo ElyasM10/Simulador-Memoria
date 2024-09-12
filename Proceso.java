@@ -1,4 +1,6 @@
 public class Proceso {
+     //seria como la tanda
+
     private int id;
     private String nombre;
     private int memoriaRequerida; //Tamaño
