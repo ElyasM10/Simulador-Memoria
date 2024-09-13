@@ -5,7 +5,7 @@ import java.util.List;
 public class AsignacionMemoria {
 
     private List<Particion> particiones; // Lista de particiones de memoria
-    private int ultimaParticionIndex = 0; // Índice de la ultima partición asignada
+    private int ultimaParticionIndex = 0; // indice de la ultima particion asignada
 
     public AsignacionMemoria(List<Particion> particiones) {
         this.particiones = particiones;
@@ -14,10 +14,10 @@ public class AsignacionMemoria {
     public Particion firstFit(Proceso Proceso) {
         for (Particion particion : particiones) {
             // Verificar si la partición es libre y tiene suficiente espacio para el Proceso
-            if (!particion.isOcupada() && particion.getTamaño() >= Proceso.getMemoriaRequerida()) {
+            if (!particion.isOcupada() && particion.gettamanio() >= Proceso.getMemoriaRequerida()) {
                 // Marcar la partición actual como ocupada
                 particion.setOcupada(true);
-                particion.setTamaño(Proceso.getMemoriaRequerida()); 
+                particion.settamanio(Proceso.getMemoriaRequerida()); 
                 return particion; // Retornar la partición asignada
             }
         }
@@ -31,7 +31,7 @@ public class AsignacionMemoria {
 
         // Buscar la mejor partición disponible
         for (Particion particion : particiones) {
-            int diferencia = particion.getTamaño() - Proceso.getMemoriaRequerida();
+            int diferencia = particion.gettamanio() - Proceso.getMemoriaRequerida();
             // Encontrar la partición más pequeña que aún puede contener el Proceso
             if (!particion.isOcupada() && diferencia >= 0 && diferencia < menorDiferencia) {
                 mejorParticion = particion;
@@ -42,7 +42,7 @@ public class AsignacionMemoria {
         // Si encontramos una partición adecuada, la asignamos al Proceso
         if (mejorParticion != null) {
             mejorParticion.setOcupada(true);
-            mejorParticion.setTamaño(Proceso.getMemoriaRequerida()); 
+            mejorParticion.settamanio(Proceso.getMemoriaRequerida()); 
         }
         return mejorParticion;  
     }
@@ -54,11 +54,11 @@ public class AsignacionMemoria {
 
         // Recorre las particiones desde la última asignada hasta el final
         for (int i = comienzoIndex; i < n; i++) {
-            if (!particiones.get(i).isOcupada() && particiones.get(i).getTamaño() >= Proceso.getMemoriaRequerida()) {
+            if (!particiones.get(i).isOcupada() && particiones.get(i).gettamanio() >= Proceso.getMemoriaRequerida()) {
                 particiones.get(i).setOcupada(true);
-                particiones.get(i).setTamaño(Proceso.getMemoriaRequerida());
+                particiones.get(i).settamanio(Proceso.getMemoriaRequerida());
 
-                // Actualizar el índice de la última partición asignada
+                // Actualizar el indice de la última partición asignada
                 ultimaParticionIndex = i;
                 return particiones.get(i); // Retorna la partición asignada
             }
@@ -66,11 +66,11 @@ public class AsignacionMemoria {
 
         // Si no se encuentra una particin, continuar la busqueda desde el principio hasta la ultima particin asignada
         for (int i = 0; i < comienzoIndex; i++) {
-            if (!particiones.get(i).isOcupada() && particiones.get(i).getTamaño() >= Proceso.getMemoriaRequerida()) {
+            if (!particiones.get(i).isOcupada() && particiones.get(i).gettamanio() >= Proceso.getMemoriaRequerida()) {
                 particiones.get(i).setOcupada(true);
-                particiones.get(i).setTamaño(Proceso.getMemoriaRequerida());
+                particiones.get(i).settamanio(Proceso.getMemoriaRequerida());
 
-                // Actualizar el índice de la ultima partición asignada
+                // Actualizar el indice de la ultima partición asignada
                 ultimaParticionIndex = i;
                 return particiones.get(i); 
             }
@@ -86,7 +86,7 @@ public class AsignacionMemoria {
 
         // Buscar la peor particion disponible 
         for (Particion particion : particiones) {
-            int diferencia = particion.getTamaño() - Proceso.getMemoriaRequerida();
+            int diferencia = particion.gettamanio() - Proceso.getMemoriaRequerida();
             // Encontrar la partición mas grande que  puede contener el Proceso
             if (!particion.isOcupada() && diferencia >= 0 && diferencia > mayorDiferencia) {
                 peorParticion = particion;
@@ -97,7 +97,7 @@ public class AsignacionMemoria {
         // Si encontramos una partición se le asignam el Proceso
         if (peorParticion != null) {
             peorParticion.setOcupada(true);
-            peorParticion.setTamaño(Proceso.getMemoriaRequerida());
+            peorParticion.settamanio(Proceso.getMemoriaRequerida());
         }
 
         return peorParticion; 

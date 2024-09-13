@@ -41,7 +41,7 @@ public class Main {
         Simulador simulador = new Simulador();
         simulador.getProcesos().addAll(listaProcesos);
 
-        System.out.println("Ingrese el tamaño de la memoria física disponible para usuarios (en unidades): ");
+        System.out.println("Ingrese el tamanio de la memoria física disponible para usuarios (en unidades): ");
         int tamanioMemoria = scanner.nextInt();
         scanner.nextLine(); // salto de línea
 

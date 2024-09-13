@@ -22,8 +22,8 @@ public class Registro {
     public void registrarEstadoParticiones(List<Particion> particiones) {
         writerEstadoParticiones.println("Estado de particiones en tiempo " + System.currentTimeMillis() + ":");
         for (Particion particion : particiones) {
-            writerEstadoParticiones.printf("ID: %d, Comienzo: %d, Tamaño: %d, Estado: %s%n",
-                    particion.getId(), particion.getDireccionComienzo(), particion.getTamaño(),
+            writerEstadoParticiones.printf("ID: %d, Comienzo: %d, Tamanio: %d, Estado: %s%n",
+                    particion.getId(), particion.getDireccionComienzo(), particion.gettamanio(),
                     particion.isOcupada() ? "Ocupada" : "Libre");
         }
         writerEstadoParticiones.flush();

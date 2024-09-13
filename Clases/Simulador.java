@@ -120,14 +120,14 @@ public class Simulador {
     }
 
     private void dividirParticion(Particion particion, int tamanioRequerido) {
-        if (particion.getTamaño() > tamanioRequerido) {
-            int nuevaTamanio = particion.getTamaño() - tamanioRequerido;
+        if (particion.gettamanio() > tamanioRequerido) {
+            int nuevaTamanio = particion.gettamanio() - tamanioRequerido;
             int nuevaDireccion = particion.getDireccionComienzo() + tamanioRequerido;
             
             Particion nuevaParticion = new Particion(particiones.size() + 1, nuevaDireccion, nuevaTamanio);
             particiones.add(particiones.indexOf(particion) + 1, nuevaParticion);
             
-            particion.setTamaño(tamanioRequerido);
+            particion.settamanio(tamanioRequerido);
         }
         particion.setOcupada(true);
     }
@@ -156,7 +156,7 @@ public class Simulador {
             Particion siguiente = particiones.get(i + 1);
             
             if (!actual.isOcupada() && !siguiente.isOcupada()) {
-                actual.setTamaño(actual.getTamaño() + siguiente.getTamaño());
+                actual.settamanio(actual.gettamanio() + siguiente.gettamanio());
                 particiones.remove(i + 1);
                 i--; // Retroceder para verificar si se puede fusionar con la siguiente
             }

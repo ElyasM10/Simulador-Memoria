@@ -3,7 +3,7 @@ package Clases;
 public class Particion {
     private int id;
     private int direccionComienzo;
-    private int tamaño;
+    private int tamanio;
     private boolean ocupada;
     private EstrategiaAsignacion estrategiaActual;
 
@@ -15,10 +15,10 @@ public class Particion {
         WORST_FIT
     }
     
-    public Particion(int id, int direccionComienzo, int tamaño) {
+    public Particion(int id, int direccionComienzo, int tamanio) {
         this.id = id;
         this.direccionComienzo = direccionComienzo;
-        this.tamaño = tamaño;
+        this.tamanio = tamanio;
         this.ocupada = false; // false (libre)/ true(ocupada)
     }
 
@@ -31,12 +31,12 @@ public class Particion {
         return direccionComienzo;
     }
 
-    public int getTamaño() {
-        return tamaño;
+    public int gettamanio() {
+        return tamanio;
     }
 
-    public void setTamaño(int tamaño){
-        this.tamaño = tamaño; 
+    public void settamanio(int tamanio){
+        this.tamanio = tamanio; 
     }
 
 
@@ -54,7 +54,7 @@ public class Particion {
         return "Particion{" +
                 "id=" + id +
                 ", direccionComienzo=" + direccionComienzo +
-                ", tamaño=" + tamaño +
+                ", tamanio=" + tamanio +
                 ", ocupada=" + ocupada +
                 '}';
     }

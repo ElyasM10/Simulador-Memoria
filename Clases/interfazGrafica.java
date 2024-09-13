@@ -1,6 +1,5 @@
 package Clases;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.*;
 
 public class interfazGrafica extends JFrame {
     private JTextField txtNombreArchivo;
@@ -21,7 +21,7 @@ public class interfazGrafica extends JFrame {
     private GanttPanel ganttPanel;
 
     public interfazGrafica() {
-        setTitle("Simulador de Asignación de Memoria");
+        setTitle("Simulador de Asignacion de Memoria");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centra la ventana
@@ -49,7 +49,7 @@ public class interfazGrafica extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        JLabel lblPolitica = new JLabel("Política de asignación:");
+        JLabel lblPolitica = new JLabel("Politica de asignacion:");
         panelEntrada.add(lblPolitica, gbc);
         gbc.gridx = 1;
         cmbPolitica = new JComboBox<>(new String[]{"firstfit", "bestfit", "nextfit", "worstfit"});
@@ -57,7 +57,7 @@ public class interfazGrafica extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        JLabel lblTamanioMemoria = new JLabel("Tamaño de memoria física disponible:");
+        JLabel lblTamanioMemoria = new JLabel("Tamanio de memoria fisica disponible:");
         panelEntrada.add(lblTamanioMemoria, gbc);
         gbc.gridx = 1;
         txtTamanioMemoria = new JTextField();
@@ -66,7 +66,7 @@ public class interfazGrafica extends JFrame {
         // Segunda columna (derecha)
         gbc.gridx = 2;
         gbc.gridy = 0;
-        JLabel lblTiempoSeleccion = new JLabel("Tiempo de selección de partición:");
+        JLabel lblTiempoSeleccion = new JLabel("Tiempo de seleccion de particion:");
         panelEntrada.add(lblTiempoSeleccion, gbc);
         gbc.gridx = 3;
         txtTiempoSeleccion = new JTextField();
@@ -82,23 +82,23 @@ public class interfazGrafica extends JFrame {
 
         gbc.gridx = 2;
         gbc.gridy = 2;
-        JLabel lblTiempoLiberacion = new JLabel("Tiempo de liberación de partición:");
+        JLabel lblTiempoLiberacion = new JLabel("Tiempo de liberacion de particion:");
         panelEntrada.add(lblTiempoLiberacion, gbc);
         gbc.gridx = 3;
         txtTiempoLiberacion = new JTextField();
         panelEntrada.add(txtTiempoLiberacion, gbc);
 
-        // Botón de cargar y simular
+        // Boton de cargar y simular
         gbc.gridx = 0;
         gbc.gridy = 3;
-        gbc.gridwidth = 4; // El botón ocupa las 4 columnas
+        gbc.gridwidth = 4; // El boton ocupa las 4 columnas
         JButton btnCargar = new JButton("Cargar y Simular");
         panelEntrada.add(btnCargar, gbc);
 
         btnCargar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cargarYSimular(); // Ejecutar simulación al hacer clic
+                cargarYSimular(); // Ejecutar simulacion al hacer clic
             }
         });
 
@@ -112,7 +112,7 @@ public class interfazGrafica extends JFrame {
         add(panel);
     }
 
-    // Método para cargar el archivo y ejecutar la simulación
+    // Método para cargar el archivo y ejecutar la simulacion
     private void cargarYSimular() {
         String nombreArchivo = txtNombreArchivo.getText();
         String politicaSeleccionada = (String) cmbPolitica.getSelectedItem();
@@ -126,14 +126,14 @@ public class interfazGrafica extends JFrame {
         simulador = new Simulador();
         simulador.getProcesos().addAll(listaProcesos);
 
-        // Configurar la política de asignación seleccionada
+        // Configurar la politica de asignacion seleccionada
         switch (politicaSeleccionada.toLowerCase()) {
             case "firstfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.FIRST_FIT);
             case "bestfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.BEST_FIT);
             case "nextfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.NEXT_FIT);
             case "worstfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.WORST_FIT);
             default -> {
-                System.out.println("Política no reconocida. Se usará FIRST_FIT por defecto.");
+                System.out.println("Politica no reconocida. Se usará FIRST_FIT por defecto.");
                 simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.FIRST_FIT);
             }
         }
@@ -157,7 +157,7 @@ public class interfazGrafica extends JFrame {
         }
     }
 
-    // Método para mostrar los resultados de la simulación como un diagrama de Gantt
+    // Método para mostrar los resultados de la simulacion como un diagrama de Gantt
     private void mostrarResultados() {
         ganttPanel.setProcesos(simulador.getProcesos()); // Actualizar el panel de Gantt con los procesos simulados
     }
@@ -173,7 +173,7 @@ public class interfazGrafica extends JFrame {
 
                 String[] datos = linea.split(",");
                 if (datos.length != 5) {
-                    JOptionPane.showMessageDialog(this, "Línea en el archivo no válida: " + linea);
+                    JOptionPane.showMessageDialog(this, "Linea en el archivo no válida: " + linea);
                     continue;
                 }
 
@@ -187,7 +187,7 @@ public class interfazGrafica extends JFrame {
                     Proceso proceso = new Proceso(id, nombre, memoriaRequerida, duracion, instanteArribo);
                     procesos.add(proceso);
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Error de formato en la línea: " + linea + " - " + e.getMessage());
+                    JOptionPane.showMessageDialog(this, "Error de formato en la linea: " + linea + " - " + e.getMessage());
                 }
             }
         } catch (IOException e) {
