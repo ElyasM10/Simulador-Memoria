@@ -1,4 +1,5 @@
-import Clases.Particion;
+package Clases;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

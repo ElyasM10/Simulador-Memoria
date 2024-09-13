@@ -1,4 +1,5 @@
-import Clases.Particion;
+package Clases;
+
 import java.util.List;
 
 public class AsignacionMemoria {

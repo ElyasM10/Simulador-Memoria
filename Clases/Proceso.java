@@ -1,3 +1,5 @@
+package Clases;
+
 public class Proceso {
      //seria como la tanda
 

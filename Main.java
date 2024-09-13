@@ -1,13 +1,20 @@
 import Clases.Particion;
+
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import  Clases.interfazGrafica;
 
 public class Main {
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new interfazGrafica().setVisible(true));
+    }
+
+        /*
         Scanner scanner = new Scanner(System.in);
         List<Proceso> listaProcesos = null;
         boolean archivoCargadoExitosamente = false;
@@ -113,4 +120,5 @@ public class Main {
         }
         return procesos;
     }
+    */
 }

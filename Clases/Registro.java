@@ -1,9 +1,9 @@
+package Clases;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-
-import Clases.Particion;
 
 public class Registro {
     private PrintWriter writerEventos;
