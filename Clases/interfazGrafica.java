@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
+
 public class interfazGrafica extends JFrame {
     private JTextField txtNombreArchivo;
     private JComboBox<String> cmbPolitica;
@@ -19,86 +20,57 @@ public class interfazGrafica extends JFrame {
     private JTextField txtTiempoLiberacion;
     private Simulador simulador;
     private GanttPanel ganttPanel;
+    
 
     public interfazGrafica() {
         setTitle("Simulador de Asignacion de Memoria");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centra la ventana
+        setExtendedState(JFrame.MAXIMIZED_BOTH); //pantalla completa
 
         // Panel principal
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        // Panel de entrada con GridBagLayout
-        JPanel panelEntrada = new JPanel();
-        panelEntrada.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Margen entre los componentes
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 0.5; // Asignar peso igual a ambas columnas
+        // Panel de entrada con GridLayout
+        JPanel panelEntrada = new JPanel(new GridLayout(4, 4, 5, 5)); // 4 filas, 4 columnas, margen de 5px
 
-        // Primer columna (izquierda)
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        JLabel lblNombreArchivo = new JLabel("Nombre del archivo:");
-        panelEntrada.add(lblNombreArchivo, gbc);
-        gbc.gridx = 1;
+        // Etiquetas y campos de entrada
+        panelEntrada.add(new JLabel("Nombre del archivo:"));
         txtNombreArchivo = new JTextField();
-        panelEntrada.add(txtNombreArchivo, gbc);
+        panelEntrada.add(txtNombreArchivo);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        JLabel lblPolitica = new JLabel("Politica de asignacion:");
-        panelEntrada.add(lblPolitica, gbc);
-        gbc.gridx = 1;
-        cmbPolitica = new JComboBox<>(new String[]{"firstfit", "bestfit", "nextfit", "worstfit"});
-        panelEntrada.add(cmbPolitica, gbc);
+        panelEntrada.add(new JLabel("Politica de asignacion:"));
+        cmbPolitica = new JComboBox<>(new String[]{"Firstfit", "Bestfit", "Nextfit", "Worstfit"});
+        panelEntrada.add(cmbPolitica);
 
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        JLabel lblTamanioMemoria = new JLabel("Tamanio de memoria fisica disponible:");
-        panelEntrada.add(lblTamanioMemoria, gbc);
-        gbc.gridx = 1;
+        panelEntrada.add(new JLabel("Tamanio de memoria fisica disponible:"));
         txtTamanioMemoria = new JTextField();
-        panelEntrada.add(txtTamanioMemoria, gbc);
+        panelEntrada.add(txtTamanioMemoria);
 
-        // Segunda columna (derecha)
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        JLabel lblTiempoSeleccion = new JLabel("Tiempo de seleccion de particion:");
-        panelEntrada.add(lblTiempoSeleccion, gbc);
-        gbc.gridx = 3;
+        panelEntrada.add(new JLabel("Tiempo de seleccion de particion:"));
         txtTiempoSeleccion = new JTextField();
-        panelEntrada.add(txtTiempoSeleccion, gbc);
+        panelEntrada.add(txtTiempoSeleccion);
 
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        JLabel lblTiempoCargaPromedio = new JLabel("Tiempo de carga promedio:");
-        panelEntrada.add(lblTiempoCargaPromedio, gbc);
-        gbc.gridx = 3;
+        panelEntrada.add(new JLabel("Tiempo de carga promedio:"));
         txtTiempoCargaPromedio = new JTextField();
-        panelEntrada.add(txtTiempoCargaPromedio, gbc);
+        panelEntrada.add(txtTiempoCargaPromedio);
 
-        gbc.gridx = 2;
-        gbc.gridy = 2;
-        JLabel lblTiempoLiberacion = new JLabel("Tiempo de liberacion de particion:");
-        panelEntrada.add(lblTiempoLiberacion, gbc);
-        gbc.gridx = 3;
+        panelEntrada.add(new JLabel("Tiempo de liberacion de particion:"));
         txtTiempoLiberacion = new JTextField();
-        panelEntrada.add(txtTiempoLiberacion, gbc);
+        panelEntrada.add(txtTiempoLiberacion);
 
         // Boton de cargar y simular
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 4; // El boton ocupa las 4 columnas
         JButton btnCargar = new JButton("Cargar y Simular");
-        panelEntrada.add(btnCargar, gbc);
+        btnCargar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelEntrada.add(btnCargar);
 
         btnCargar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cargarYSimular(); // Ejecutar simulacion al hacer clic
+                // Lógica de simulación al hacer clic
+                 cargarYSimular(); // Descomentar si deseas utilizar esta función
             }
         });
 
@@ -111,6 +83,7 @@ public class interfazGrafica extends JFrame {
 
         add(panel);
     }
+    
 
     // Método para cargar el archivo y ejecutar la simulacion
     private void cargarYSimular() {
