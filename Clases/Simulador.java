@@ -6,9 +6,9 @@ import java.util.List;
 
 
 public class Simulador {
-    private List<Particion> particiones;
+    private List<Particion> listaParticiones;
     private List<Proceso> procesos;
-    private Particion.EstrategiaAsignacion estrategiaActual;
+    private int estrategiaActual;
     private AsignacionMemoria asignador;
     private int tamanioMemoria;
     private int tiempoSeleccion;
@@ -17,8 +17,45 @@ public class Simulador {
     private Registro registro;
     private int memoriaTotal;
 
+    
 
+        public Simulador(List<Proceso> procesos, int tamanioMemoria, int tiempoSeleccion, int tiempoCargaPromedio, int tiempoLiberacion, int estrategia) {
+        this.procesos = procesos;
+        this.tamanioMemoria = tamanioMemoria;
+        this.tiempoSeleccion = tiempoSeleccion;
+        this.tiempoCargaPromedio = tiempoCargaPromedio;
+        this.tiempoLiberacion = tiempoLiberacion;
+        this.estrategiaActual = estrategia;
 
+        // Inicializamos la lista de particiones antes de pasarla al asignador
+        this.listaParticiones = new ArrayList<>();
+        this.asignador = new AsignacionMemoria();
+        try {
+            this.registro = new Registro("eventos.txt", "estado_particiones.txt");
+        } catch (IOException e) {
+            System.out.println("Error al crear los archivos de registro: " + e.getMessage());
+        }
+    }
+     
+    public void imprimirDatosSimulador() {
+        System.out.println("Datos del Simulador:");
+        System.out.println("--------------------");
+        
+        System.out.println("Tamaño de la Memoria: " + tamanioMemoria);
+        System.out.println("Tiempo de Selección: " + tiempoSeleccion);
+        System.out.println("Tiempo de Carga Promedio: " + tiempoCargaPromedio);
+        System.out.println("Tiempo de Liberación: " + tiempoLiberacion);
+        System.out.println("Estrategia de Asignación: " + estrategiaActual);
+        
+        System.out.println("Lista de Procesos:");
+        for (Proceso proceso : procesos) {
+            System.out.println("  - Proceso: " + proceso.getNombre() + ", Tamaño: " + proceso.getTamanio() + ", Duración: " + proceso.getDuracion());
+        }
+        
+        System.out.println("Cantidad de Particiones: " + listaParticiones.size());
+    }
+     
+    /* 
     public Simulador() {
         this.particiones = new ArrayList<>();
         this.procesos = new ArrayList<>();
@@ -34,35 +71,43 @@ public class Simulador {
             System.out.println("Error al crear los archivos de registro: " + e.getMessage());
         }
     }
+        */
 
-/*
-    public void simular() {
-        Collections.sort(procesos, Comparator.comparingInt(Proceso::getInstanteArribo));
 
-        for (Proceso proceso : procesos) {
-            Particion particion = asignarParticion(proceso);
-            if (particion != null) {
-                registro.registrarEvento("Asignada partición para el proceso: " + proceso.getNombre() +
-                        " - Partición ID: " + particion.getId() +
-                        " - Tiempo: " + proceso.getInstanteArribo());
+    //public void simular() {
+       // Collections.sort(procesos, Comparator.comparingInt(Proceso::getInstanteArribo));
 
-                cargarProceso(proceso);
-                liberarProceso(proceso, particion);
-            } else {
-                registro.registrarEvento("No se pudo asignar el proceso: " + proceso.getNombre() +
-                        " - Tiempo: " + proceso.getInstanteArribo());
-            }
-            registro.registrarEstadoParticiones(particiones);
-        }
-      */
+        //for (Proceso proceso : procesos) {
+           // Particion particion = asignarParticion(proceso);
+           // if (particion != null) {
+                //registro.registrarEvento("Asignada partición para el proceso: " + proceso.getNombre() +
+                //        " - Partición ID: " + particion.getId() +
+                  //      " - Tiempo: " + proceso.getInstanteArribo());
+
+              //  cargarProceso(proceso);
+             //   liberarProceso(proceso, particion);
+           // } else {
+            //    registro.registrarEvento("No se pudo asignar el proceso: " + proceso.getNombre() +
+           //             " - Tiempo: " + proceso.getInstanteArribo());
+          //  }
+        //    registro.registrarEstadoParticiones(particiones);
+      //  }
+      
     public void simular() {
     int tiempoActual = 0;
+
+   System.out.println("Entrando al  simulador");
+   
+
     for (Proceso proceso : procesos) {
         tiempoActual = Math.max(tiempoActual, proceso.getInstanteArribo());
         
-        tiempoActual += tiempoSeleccion;
-        Particion particion = asignarParticion(proceso);
+        tiempoActual += tiempoSeleccion; 
+        System.out.println("Asignando partición para el proceso: " + proceso.getNombre());
+        Particion particion = asignarParticion(listaParticiones,proceso,tamanioMemoria,tiempoSeleccion,tiempoCargaPromedio,tiempoLiberacion);
         
+      
+
         if (particion != null) {
             tiempoActual += tiempoCargaPromedio;
             registro.registrarEvento("Asignada partición para el proceso: " + proceso.getNombre() +
@@ -72,15 +117,13 @@ public class Simulador {
             tiempoActual += proceso.getDuracion();
             
             tiempoActual += tiempoLiberacion;
-            liberarProceso(proceso, particion);
+           // liberarProceso(proceso, particion);
         } else {
             registro.registrarEvento("No se pudo asignar el proceso: " + proceso.getNombre() +
                     " - Tiempo: " + tiempoActual);
         }
-        registro.registrarEstadoParticiones(particiones);
+        registro.registrarEstadoParticiones(listaParticiones);
     }
-  
-
 
         calcularIndicadores();
 
@@ -93,32 +136,39 @@ public class Simulador {
         imprimirResultados();
     }
 
+ 
 
-   public Particion asignarParticion(Proceso proceso) {
+
+   public Particion asignarParticion(List<Particion> listaParticiones,Proceso proceso,int tamanioMemoria,int tiempoSeleccion,int tiempoCargaPromedio,int tiempoLiberacion) {
         Particion particionAsignada = null;
         
         switch (estrategiaActual) {
-            case FIRST_FIT:
-                particionAsignada = asignador.firstFit(proceso);
-                break;
-            case BEST_FIT:
-                particionAsignada = asignador.bestFit(proceso);
-                break;
-            case NEXT_FIT:
-                particionAsignada = asignador.nextFit(proceso);
-                break;
-            case WORST_FIT:
-                particionAsignada = asignador.worstFit(proceso);
-                break;
+            case 1 -> {
+                System.out.println("Entrando a First Fit");
+                particionAsignada = asignador.firstFit(listaParticiones,proceso,tamanioMemoria,tiempoSeleccion,tiempoCargaPromedio,tiempoLiberacion);
+            }
+            case 2 -> {
+                System.out.println("Entrando a Best Fit");
+                particionAsignada = asignador.bestFit(listaParticiones,proceso,tamanioMemoria,tiempoSeleccion,tiempoCargaPromedio,tiempoLiberacion);
+            }
+            case 3 -> {
+                System.out.println("Entrando a Next Fit");
+                particionAsignada = asignador.nextFit(listaParticiones,proceso,tamanioMemoria,tiempoSeleccion,tiempoCargaPromedio,tiempoLiberacion);
+            }
+            case 4 -> {
+                System.out.println("Entrando a Worst Fit");
+                particionAsignada = asignador.worstFit(listaParticiones,proceso,tamanioMemoria,tiempoSeleccion,tiempoCargaPromedio,tiempoLiberacion);
+            }
         }
         
-        if (particionAsignada != null) {
-            dividirParticion(particionAsignada, proceso.getMemoriaRequerida());
-        }
+       // if (particionAsignada != null) {
+        //   dividirParticion(particionAsignada, proceso.getMemoriaRequerida());
+       // }
         
         return particionAsignada;
     }
 
+    /* 
     private void dividirParticion(Particion particion, int tamanioRequerido) {
         if (particion.gettamanio() > tamanioRequerido) {
             int nuevaTamanio = particion.gettamanio() - tamanioRequerido;
@@ -131,7 +181,7 @@ public class Simulador {
         }
         particion.setOcupada(true);
     }
-
+*/
     
 
 
@@ -144,13 +194,13 @@ public class Simulador {
             System.out.println("Error al liberar el proceso: " + e.getMessage());
         }
 
-        particion.setOcupada(false); // Marcar la partición como libre
+        particion.setEstado(false); // Marcar la partición como libre
         System.out.println("Partición liberada para el proceso: " + proceso.getNombre());
     }
 
 
-    
-    private void fusionarParticionesLibres() {
+    /*
+        private void fusionarParticionesLibres() {
         for (int i = 0; i < particiones.size() - 1; i++) {
             Particion actual = particiones.get(i);
             Particion siguiente = particiones.get(i + 1);
@@ -162,19 +212,14 @@ public class Simulador {
             }
         }
     }
-
+*/
     
 
-    public void setEstrategiaActual(Particion.EstrategiaAsignacion estrategia) {
+    public void setEstrategiaActual(int estrategia) {
         this.estrategiaActual = estrategia;
     }
 
 
-    private void cargarProceso(Proceso proceso) {
-
-        System.out.println("Cargando proceso: " + proceso.getNombre());
-
-    }
 
 
     private void calcularIndicadores() {
@@ -268,11 +313,5 @@ public class Simulador {
     }
 
     
-    public void setMemoriaTotal(int memoriaTotal) {
-        this.memoriaTotal = memoriaTotal;
-
-        particiones.add(new Particion(1, 0, memoriaTotal));
-    }
-
 
 }

@@ -10,8 +10,9 @@ public class Registro {
     private PrintWriter writerEstadoParticiones;
 
     public Registro(String archivoEventos, String archivoEstadoParticiones) throws IOException {
-        this.writerEventos = new PrintWriter(new FileWriter(archivoEventos, true));
-        this.writerEstadoParticiones = new PrintWriter(new FileWriter(archivoEstadoParticiones, true));
+        // Abrimos los archivos en modo de sobrescritura para limpiarlos al inicio
+        this.writerEventos = new PrintWriter(new FileWriter(archivoEventos, false));
+        this.writerEstadoParticiones = new PrintWriter(new FileWriter(archivoEstadoParticiones, false));
     }
 
     public void registrarEvento(String mensaje) {
@@ -22,9 +23,9 @@ public class Registro {
     public void registrarEstadoParticiones(List<Particion> particiones) {
         writerEstadoParticiones.println("Estado de particiones en tiempo " + System.currentTimeMillis() + ":");
         for (Particion particion : particiones) {
-            writerEstadoParticiones.printf("ID: %d, Comienzo: %d, Tamanio: %d, Estado: %s%n",
-                    particion.getId(), particion.getDireccionComienzo(), particion.gettamanio(),
-                    particion.isOcupada() ? "Ocupada" : "Libre");
+            writerEstadoParticiones.printf("ID: %d, Comienzo: %d, Tamaño: %d, Estado: %s%n",
+                    particion.getId(), particion.getTiempoInicio(), particion.getTamanio(),
+                    particion.getEstado() ? "Ocupada" : "Libre");
         }
         writerEstadoParticiones.flush();
     }

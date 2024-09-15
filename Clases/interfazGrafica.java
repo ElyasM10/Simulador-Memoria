@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import Clases.Particion.EstrategiaAsignacion;
 
 
 public class interfazGrafica extends JFrame {
@@ -20,11 +21,16 @@ public class interfazGrafica extends JFrame {
     private JTextField txtTiempoLiberacion;
     private Simulador simulador;
     private GanttPanel ganttPanel;
+    public static final int FIRST_FIT = 1;
+    public static final int BEST_FIT = 2;
+    public static final int NEXT_FIT = 3;
+    public static final int WORST_FIT = 4;
+
     
 
     public interfazGrafica() {
         setTitle("Simulador de Asignacion de Memoria");
-        setSize(800, 600);
+        setSize(800, 600);      
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centra la ventana
         setExtendedState(JFrame.MAXIMIZED_BOTH); //pantalla completa
@@ -42,8 +48,9 @@ public class interfazGrafica extends JFrame {
         panelEntrada.add(txtNombreArchivo);
 
         panelEntrada.add(new JLabel("Politica de asignacion:"));
-        cmbPolitica = new JComboBox<>(new String[]{"Firstfit", "Bestfit", "Nextfit", "Worstfit"});
+        cmbPolitica = new JComboBox<>(new String[]{"FirstFit", "BestFit", "NextFit", "WorstFit"});
         panelEntrada.add(cmbPolitica);
+        
 
         panelEntrada.add(new JLabel("Tamanio de memoria fisica disponible:"));
         txtTamanioMemoria = new JTextField();
@@ -61,6 +68,14 @@ public class interfazGrafica extends JFrame {
         txtTiempoLiberacion = new JTextField();
         panelEntrada.add(txtTiempoLiberacion);
 
+        // Crear el panel de Gantt para mostrar el diagrama
+        ganttPanel = new GanttPanel(new ArrayList<>());
+
+        // Añadir paneles al contenedor principal
+        panel.add(panelEntrada, BorderLayout.NORTH);
+        panel.add(ganttPanel, BorderLayout.CENTER);
+
+        
         // Boton de cargar y simular
         JButton btnCargar = new JButton("Cargar y Simular");
         btnCargar.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -74,68 +89,10 @@ public class interfazGrafica extends JFrame {
             }
         });
 
-        // Crear el panel de Gantt para mostrar el diagrama
-        ganttPanel = new GanttPanel(new ArrayList<>());
-
-        // Añadir paneles al contenedor principal
-        panel.add(panelEntrada, BorderLayout.NORTH);
-        panel.add(ganttPanel, BorderLayout.CENTER);
 
         add(panel);
     }
     
-
-    // Método para cargar el archivo y ejecutar la simulacion
-    private void cargarYSimular() {
-        String nombreArchivo = txtNombreArchivo.getText();
-        String politicaSeleccionada = (String) cmbPolitica.getSelectedItem();
-        List<Proceso> listaProcesos = cargarProcesosDesdeArchivo(nombreArchivo);
-
-        if (listaProcesos == null || listaProcesos.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No se pudieron cargar procesos del archivo.");
-            return;
-        }
-
-        simulador = new Simulador();
-        simulador.getProcesos().addAll(listaProcesos);
-
-        // Configurar la politica de asignacion seleccionada
-        switch (politicaSeleccionada.toLowerCase()) {
-            case "firstfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.FIRST_FIT);
-            case "bestfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.BEST_FIT);
-            case "nextfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.NEXT_FIT);
-            case "worstfit" -> simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.WORST_FIT);
-            default -> {
-                System.out.println("Politica no reconocida. Se usará FIRST_FIT por defecto.");
-                simulador.setEstrategiaActual(Particion.EstrategiaAsignacion.FIRST_FIT);
-            }
-        }
-
-        // Configurar otros parámetros
-        try {
-            int tamanioMemoria = Integer.parseInt(txtTamanioMemoria.getText());
-            int tiempoSeleccion = Integer.parseInt(txtTiempoSeleccion.getText());
-            int tiempoCargaPromedio = Integer.parseInt(txtTiempoCargaPromedio.getText());
-            int tiempoLiberacion = Integer.parseInt(txtTiempoLiberacion.getText());
-
-            simulador.setTamanioMemoria(tamanioMemoria);
-            simulador.setTiempoSeleccion(tiempoSeleccion);
-            simulador.setTiempoCargaPromedio(tiempoCargaPromedio);
-            simulador.setTiempoLiberacion(tiempoLiberacion);
-
-            simulador.simular();
-            mostrarResultados();
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Error en el formato de los números: " + ex.getMessage());
-        }
-    }
-
-    // Método para mostrar los resultados de la simulacion como un diagrama de Gantt
-    private void mostrarResultados() {
-        ganttPanel.setProcesos(simulador.getProcesos()); // Actualizar el panel de Gantt con los procesos simulados
-    }
-
-    // Método para cargar los procesos desde un archivo
     private List<Proceso> cargarProcesosDesdeArchivo(String nombreArchivo) {
         List<Proceso> procesos = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
@@ -168,4 +125,73 @@ public class interfazGrafica extends JFrame {
         }
         return procesos;
     }
+
+
+    // Método para cargar el archivo y ejecutar la simulacion
+    private void cargarYSimular() {
+        String nombreArchivo = txtNombreArchivo.getText();
+        String politicaSeleccionada = (String) cmbPolitica.getSelectedItem();
+       
+        List<Proceso> listaProcesos = new ArrayList<>(); 
+        listaProcesos = cargarProcesosDesdeArchivo(nombreArchivo);
+
+        if (listaProcesos == null || listaProcesos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No se pudieron cargar procesos del archivo.");
+            return;
+        }
+
+    
+            // Configurar la estrategia de asignación seleccionada
+            int estrategiaAsignacion;
+
+            switch (politicaSeleccionada.toLowerCase()) {
+                case "firstfit":
+                    estrategiaAsignacion = FIRST_FIT;
+                    break;
+                case "bestfit":
+                    estrategiaAsignacion = BEST_FIT;
+                    break;
+                case "nextfit":
+                    estrategiaAsignacion = NEXT_FIT;
+                    break;
+                case "worstfit":
+                    estrategiaAsignacion = WORST_FIT;
+                    break;
+                default:
+                    System.out.println("Política no reconocida. Se usará FIRST_FIT por defecto.");
+                    estrategiaAsignacion = FIRST_FIT;
+                    break;
+            }
+            
+        // Configurar otros parámetros
+        try {
+            int tamanioMemoria = Integer.parseInt(txtTamanioMemoria.getText());
+            int tiempoSeleccion = Integer.parseInt(txtTiempoSeleccion.getText());
+            int tiempoCargaPromedio = Integer.parseInt(txtTiempoCargaPromedio.getText());
+            int tiempoLiberacion = Integer.parseInt(txtTiempoLiberacion.getText());
+
+         //   System.out.println("Tamanio de la memoria: " + tamanioMemoria);
+          //  System.out.println("Tiempo de seleccion: " + tiempoSeleccion);
+          //  System.out.println("Tiempo de carga promedio: " + tiempoCargaPromedio);
+           // System.out.println("Tiempo de liberación: " + tiempoLiberacion);
+
+            // Crear el simulador con la estrategia seleccionada
+           
+
+            simulador = new Simulador(listaProcesos, tamanioMemoria, tiempoSeleccion, tiempoCargaPromedio, tiempoLiberacion, estrategiaAsignacion);
+      
+         //   simulador.imprimirDatosSimulador();
+            simulador.simular();
+            mostrarResultados();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Error en el formato de los números: " + ex.getMessage());
+        }
+    }
+
+    // Método para mostrar los resultados de la simulacion como un diagrama de Gantt
+    private void mostrarResultados() {
+        ganttPanel.setProcesos(simulador.getProcesos()); // Actualizar el panel de Gantt con los procesos simulados
+    }
+
+   
 }

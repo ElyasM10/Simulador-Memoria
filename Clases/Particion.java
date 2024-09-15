@@ -2,9 +2,10 @@ package Clases;
 
 public class Particion {
     private int id;
-    private int direccionComienzo;
+    private int tiempoInicio;
+    private int tiempoFinalizacion;
     private int tamanio;
-    private boolean ocupada;
+    private boolean estado;
     private EstrategiaAsignacion estrategiaActual;
 
 
@@ -15,37 +16,50 @@ public class Particion {
         WORST_FIT
     }
     
-    public Particion(int id, int direccionComienzo, int tamanio) {
+    public Particion(int id, int tiempoInicio, int tamanio, boolean estado, int tiempoFinalizacion) {
         this.id = id;
-        this.direccionComienzo = direccionComienzo;
+        this.tiempoInicio = tiempoInicio;
         this.tamanio = tamanio;
-        this.ocupada = false; // false (libre)/ true(ocupada)
+        this.estado = estado; // Asigna el estado recibido como parámetro
+        this.tiempoFinalizacion = tiempoFinalizacion;
     }
-
+    
     
     public int getId() {
         return id;
     }
 
-    public int getDireccionComienzo() {
-        return direccionComienzo;
+    public int getTiempoInicio() {
+        return tiempoInicio;
     }
 
-    public int gettamanio() {
+    public void setTiempoInicio(int tiempoInicio){
+        this.tiempoInicio = tiempoInicio;
+    }
+
+    public int getTiempoFinalizacion(){
+        return  tiempoFinalizacion;
+    }
+
+    public void setTiempoFinalizacion(int tiempoFinalizacion){
+        this.tiempoFinalizacion = tiempoFinalizacion;
+    }
+
+    public int getTamanio() {
         return tamanio;
     }
 
-    public void settamanio(int tamanio){
+    public void setTamanio(int tamanio){
         this.tamanio = tamanio; 
     }
 
 
-    public boolean isOcupada() {
-        return ocupada;
+    public boolean getEstado() {
+        return estado;
     }
 
-    public void setOcupada(boolean ocupada) {
-        this.ocupada = ocupada;
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 
 
@@ -53,9 +67,9 @@ public class Particion {
     public String toString() {
         return "Particion{" +
                 "id=" + id +
-                ", direccionComienzo=" + direccionComienzo +
+                ", tiempoInicio=" + tiempoInicio +
                 ", tamanio=" + tamanio +
-                ", ocupada=" + ocupada +
+                ", estado=" + estado +
                 '}';
     }
 }

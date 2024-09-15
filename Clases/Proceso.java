@@ -5,19 +5,17 @@ public class Proceso {
 
     private int id;
     private String nombre;
-    private int memoriaRequerida; //Tamaño
+    private int Tamanio; //Tamaño
     private int instanteArribo;
     private int duracion;
 
 
-    public Proceso(int id,String nombre,int memoriaRequerida,int duracion,int instanteArribo){
+    public Proceso(int id,String nombre,int Tamanio,int duracion,int instanteArribo){
         this.id = id;
         this.nombre = nombre;
-        this.memoriaRequerida = memoriaRequerida;
+        this.Tamanio = Tamanio;
         this.duracion = duracion;
         this.instanteArribo = instanteArribo;
-
-
     }
     
     public int getID(){
@@ -56,12 +54,12 @@ public class Proceso {
     }
 
 
-    public int getMemoriaRequerida() {
-        return memoriaRequerida;
+    public int getTamanio() {
+        return Tamanio;
     }
 
-    public void setMemoriaRequerida(int memoriaRequerida) {
-        this.memoriaRequerida = memoriaRequerida;
+    public void setTamanio(int Tamanio) {
+        this.Tamanio = Tamanio;
     }
 
     // toString 
@@ -72,7 +70,7 @@ public class Proceso {
                 "nombre='" + nombre + '\'' +
                 ", instanteArribo=" + instanteArribo +
                 ", duracion=" + duracion +
-                ", memoriaRequerida=" + memoriaRequerida +
+                ", Tamanio=" + Tamanio +
                 '}';
     }
 }
