@@ -6,15 +6,17 @@ public class Particion {
     private int tiempoFinalizacion;
     private int tamanio;
     private boolean estado;
-    private EstrategiaAsignacion estrategiaActual;
+    private Proceso proceso;
+  //  private EstrategiaAsignacion estrategiaActual;
 
-
+/*
       public enum EstrategiaAsignacion {
         FIRST_FIT,
         BEST_FIT,
         NEXT_FIT,
         WORST_FIT
     }
+  */
     
     public Particion(int id, int tiempoInicio, int tamanio, boolean estado, int tiempoFinalizacion) {
         this.id = id;
@@ -25,6 +27,19 @@ public class Particion {
     }
     
     
+    public void setId(int id){
+        this.id = id;
+    }
+    
+    public void setProceso(Proceso proceso){
+        this.proceso = proceso;
+    }
+
+    public Proceso getProceso(){
+        return proceso;
+    }
+
+
     public int getId() {
         return id;
     }

@@ -42,52 +42,65 @@ public class AsignacionMemoria {
     return null; // No se encontro una particion adecuada
 }
 */
+
 public Particion firstFit(List<Particion> listaParticiones, Proceso proceso, int tamanioMemoria, int tiempoSeleccion, int tiempoCargaPromedio, int tiempoLiberacion) {
     System.out.println("Buscando una particion adecuada para el proceso:");
-    System.out.println("Tamaño del proceso: " + proceso.getTamanio());
-    System.out.println("Duracion del proceso: " + proceso.getDuracion());
-    System.out.println("Tiempo de seleccion: " + tiempoSeleccion);
-    System.out.println("Tiempo de carga promedio: " + tiempoCargaPromedio);
-    System.out.println("Tiempo de liberacion: " + tiempoLiberacion);
+    System.out.println("Tamano del proceso: " + proceso.getTamanio());
+    
+    // Agregamos un índice 'i' al ciclo para controlar el ID de la particion
+    for (int i = 0; i < listaParticiones.size(); i++) {
+        Particion particion = listaParticiones.get(i); // Obtener la partición actual
+    
+        System.out.println("Comparando con partición:");
+        System.out.println("Tamaño de partición: " + particion.getTamanio());
+        System.out.println("Estado de partición (true = ocupada, false = libre): " + (particion.getEstado() ? "Ocupada" : "Libre"));
+    
 
-    for (Particion particion : listaParticiones) {
-        System.out.println("Comparando con particion:");
-        System.out.println("ID de particion: " + particion.getId());
-        System.out.println("Tamaño de particion: " + particion.getTamanio());
-        System.out.println("Estado de particion (true = libre, false = ocupada): " + (particion.getEstado() ? "Ocupada" : "Libre"));
+           int tamanioPar = particion.getTamanio();
+           int tamanioProceso = proceso.getTamanio();
 
-        // True = libre, false = ocupado
-        if (!particion.getEstado() && particion.getTamanio() >= proceso.getTamanio()) {
-            System.out.println("Particion adecuada encontrada:");
-            System.out.println("ID de particion: " + particion.getId());
-            System.out.println("Tamaño de particion: " + particion.getTamanio());
+           System.out.println("Particion: "+tamanioPar+" Proceso: "+tamanioProceso);
 
-            // Asignar el proceso a esta particion
-            particion.setEstado(true); // Marcar como ocupada
-            particion.setTiempoInicio(tiempoSeleccion); // Ajustar tiempo de inicio
-            particion.setTiempoFinalizacion(tiempoSeleccion + proceso.getDuracion() + tiempoCargaPromedio + tiempoLiberacion); // Ajustar tiempo de finalizacion
-
-            System.out.println("Proceso asignado a particion con ID: " + particion.getId());
-            System.out.println("Tiempo de inicio: " + particion.getTiempoInicio());
-            System.out.println("Tiempo de finalizacion: " + particion.getTiempoFinalizacion());
-
-            return particion;
+        // Verificar si la partición está libre y tiene espacio suficiente
+        if (tamanioPar > tamanioProceso) {
+            // Si la partición está libre, asignar directamente el proceso
+            if (!particion.getEstado()) {
+                System.out.println("Partición libre y adecuada encontrada:");
+                particion.setEstado(true); // Marcar como ocupada
+                particion.setProceso(proceso); 
+                particion.setTiempoInicio(tiempoSeleccion); 
+                particion.setTiempoFinalizacion(tiempoSeleccion + proceso.getDuracion() + tiempoCargaPromedio + tiempoLiberacion);
+                
+                // Verificar si sobra espacio para crear una nueva partición libre
+                int tamanoRestante = particion.getTamanio() - proceso.getTamanio();
+                if (tamanoRestante > 0) {
+                    Particion nuevaParticion = new Particion(listaParticiones.size() + 1, -1, tamanoRestante, true, -1);
+                    listaParticiones.add(nuevaParticion); // Crear una nueva partición libre con el espacio sobrante
+                    System.out.println("Nueva partición libre creada con tamaño: " + tamanoRestante);
+                }
+                
+                return particion; // Proceso asignado, salir del método
+            } 
+            // Si la partición está ocupada, dividir el espacio y crear una nueva partición
+            else {
+                System.out.println("Partición ocupada, creando una nueva partición con el espacio sobrante...");
+                
+                int tamanoRestante = particion.getTamanio() - proceso.getTamanio();
+                if (tamanoRestante > 0) {
+                    Particion nuevaParticion = new Particion(listaParticiones.size() + 1, -1, tamanoRestante, true, -1);
+                    listaParticiones.add(nuevaParticion); // Agregar la nueva partición a la lista
+                    System.out.println("Nueva partición libre creada con tamaño: " + tamanoRestante);
+                }
+            }
         } else {
-            System.out.println("Particion no adecuada.");
+            System.out.println("Partición no adecuada.");
         }
+    
     }
 
     System.out.println("No se encontro una particion adecuada para el proceso.");
     return null; // No se encontro una particion adecuada
 }
-
-
-
-
-      
-
- 
-
 
     public Particion bestFit(List<Particion>listaParticiones,Proceso proceso, int tamanioMemoria, int tiempoSeleccion, int tiempoCargaPromedio, int tiempoLiberacion) {
         Particion mejorParticion = null;
@@ -96,7 +109,7 @@ public Particion firstFit(List<Particion> listaParticiones, Proceso proceso, int
         // Buscar la mejor particion disponible
         for (Particion particion : listaParticiones) {
             int diferencia = particion.getTamanio() - proceso.getTamanio();
-            // Encontrar la particion más pequeña que aún puede contener el Proceso
+            // Encontrar la particion más pequena que aún puede contener el Proceso
             if (!particion.getEstado() && diferencia >= 0 && diferencia < menorDiferencia) {
                 mejorParticion = particion;
                 menorDiferencia = diferencia;

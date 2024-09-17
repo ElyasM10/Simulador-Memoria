@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import Clases.Particion.EstrategiaAsignacion;
+
 
 
 public class interfazGrafica extends JFrame {

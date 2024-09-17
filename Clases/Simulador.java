@@ -92,12 +92,29 @@ public class Simulador {
           //  }
         //    registro.registrarEstadoParticiones(particiones);
       //  }
+
+      /* 
+     Tengo un trabajo en el cual tengo que simulador la asignacion de memoria dinamica.
+     El usuario ingresa el tamaño de la memoria que se simularia con una lista.
+     Se lee un archivo con trabajos que serian procesos con un determinado tamanio una vez cargado 
+     se elegi el tipo de politica firtsFit,NextFit,BestFit,worstfit se crean particiones respetando
+     la memoria ingresada por el usuario, la lista se va particionando hasta que se llene al tope de la memoria
+     que seria lo que ingresa el usuario los demas trabajos deben esperar que el proceso termine segun la politica 
+     para ingresar, nesecitos que me ayudes ya tengo algo hecho, la idea eesta en la imagen que te pase.
+*/
+
+    public Simulador() {
+    }
       
     public void simular() {
     int tiempoActual = 0;
 
    System.out.println("Entrando al  simulador");
    
+   Particion particionInicial = new Particion(0,-1 ,tamanioMemoria, true, -1);
+
+   listaParticiones.add(particionInicial);
+
 
     for (Proceso proceso : procesos) {
         tiempoActual = Math.max(tiempoActual, proceso.getInstanteArribo());
@@ -117,6 +134,7 @@ public class Simulador {
             tiempoActual += proceso.getDuracion();
             
             tiempoActual += tiempoLiberacion;
+        
            // liberarProceso(proceso, particion);
         } else {
             registro.registrarEvento("No se pudo asignar el proceso: " + proceso.getNombre() +
@@ -167,6 +185,7 @@ public class Simulador {
         
         return particionAsignada;
     }
+    
 
     /* 
     private void dividirParticion(Particion particion, int tamanioRequerido) {
