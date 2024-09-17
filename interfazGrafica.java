@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import Clases.*;
+
 
 
 
@@ -193,5 +195,10 @@ public class interfazGrafica extends JFrame {
         ganttPanel.setProcesos(simulador.getProcesos()); // Actualizar el panel de Gantt con los procesos simulados
     }
 
+        public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new interfazGrafica().setVisible(true);
+        });
+    }
    
 }

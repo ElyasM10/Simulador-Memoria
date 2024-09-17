@@ -7,7 +7,7 @@ public class AsignacionMemoria {
    
      // Lista de particiones de memoria
     private int ultimaParticionIndex = 0; // indice de la ultima particion asignada
-
+    public int  tamanoRestante;
 
 /*
     public Particion firstFit(Proceso Proceso,int tamanioMemoria,int tiempoSeleccion,int tiempoCargaPromedio,int tiempoLiberacion) {
@@ -45,25 +45,29 @@ public class AsignacionMemoria {
 
 public Particion firstFit(List<Particion> listaParticiones, Proceso proceso, int tamanioMemoria, int tiempoSeleccion, int tiempoCargaPromedio, int tiempoLiberacion) {
     System.out.println("Buscando una particion adecuada para el proceso:");
-    System.out.println("Tamano del proceso: " + proceso.getTamanio());
+  //  System.out.println("Tamano del proceso: " + proceso.getTamanio());
     
-    // Agregamos un índice 'i' al ciclo para controlar el ID de la particion
+    
     for (int i = 0; i < listaParticiones.size(); i++) {
-        Particion particion = listaParticiones.get(i); // Obtener la partición actual
+        Particion particion = listaParticiones.get(i); 
     
-        System.out.println("Comparando con partición:");
-        System.out.println("Tamaño de partición: " + particion.getTamanio());
-        System.out.println("Estado de partición (true = ocupada, false = libre): " + (particion.getEstado() ? "Ocupada" : "Libre"));
+     //   System.out.println("Comparando con partición:");
+     //   System.out.println("Tamaño de partición: " + particion.getTamanio());
+       // System.out.println("Estado de partición (true = ocupada, false = libre): " + (particion.getEstado() ? "Ocupada" : "Libre"));
     
 
            int tamanioPar = particion.getTamanio();
            int tamanioProceso = proceso.getTamanio();
 
-           System.out.println("Particion: "+tamanioPar+" Proceso: "+tamanioProceso);
+        //   int tamanioPar = 130;
+        //   int tamanioProceso = 30;
+           
 
-        // Verificar si la partición está libre y tiene espacio suficiente
+           System.out.println("Particion: "+tamanioPar+" Proceso: "+tamanioProceso);
+        
+        
         if (tamanioPar > tamanioProceso) {
-            // Si la partición está libre, asignar directamente el proceso
+       
             if (!particion.getEstado()) {
                 System.out.println("Partición libre y adecuada encontrada:");
                 particion.setEstado(true); // Marcar como ocupada
@@ -72,7 +76,7 @@ public Particion firstFit(List<Particion> listaParticiones, Proceso proceso, int
                 particion.setTiempoFinalizacion(tiempoSeleccion + proceso.getDuracion() + tiempoCargaPromedio + tiempoLiberacion);
                 
                 // Verificar si sobra espacio para crear una nueva partición libre
-                int tamanoRestante = particion.getTamanio() - proceso.getTamanio();
+                tamanoRestante = particion.getTamanio() - proceso.getTamanio();
                 if (tamanoRestante > 0) {
                     Particion nuevaParticion = new Particion(listaParticiones.size() + 1, -1, tamanoRestante, true, -1);
                     listaParticiones.add(nuevaParticion); // Crear una nueva partición libre con el espacio sobrante
@@ -80,12 +84,10 @@ public Particion firstFit(List<Particion> listaParticiones, Proceso proceso, int
                 }
                 
                 return particion; // Proceso asignado, salir del método
-            } 
-            // Si la partición está ocupada, dividir el espacio y crear una nueva partición
-            else {
+            }else {
                 System.out.println("Partición ocupada, creando una nueva partición con el espacio sobrante...");
                 
-                int tamanoRestante = particion.getTamanio() - proceso.getTamanio();
+                tamanoRestante = particion.getTamanio() - proceso.getTamanio();
                 if (tamanoRestante > 0) {
                     Particion nuevaParticion = new Particion(listaParticiones.size() + 1, -1, tamanoRestante, true, -1);
                     listaParticiones.add(nuevaParticion); // Agregar la nueva partición a la lista

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import javax.swing.*;
 
-class GanttPanel extends JPanel {
+public class GanttPanel extends JPanel {
     private List<Proceso> procesos;
 
     public GanttPanel(List<Proceso> procesos) {
