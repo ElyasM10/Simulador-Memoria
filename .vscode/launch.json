@@ -8,6 +8,12 @@
             "type": "java",
             "name": "interfazGrafica",
             "request": "launch",
+            "mainClass": "Clases.interfazGrafica"
+        },
+        {
+            "type": "java",
+            "name": "interfazGrafica",
+            "request": "launch",
             "mainClass": "Clases.interfazGrafica",
             "projectName": "Simulador-Memoria_cf13303a"
         },

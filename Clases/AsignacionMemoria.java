@@ -7,7 +7,9 @@ public class AsignacionMemoria {
    
      // Lista de particiones de memoria
     private int ultimaParticionIndex = 0; // indice de la ultima particion asignada
-    public int  tamanoRestante;
+    public int  tamanoRestante = 0;
+
+    public int fragmentacionExterna = 0;
 
 /*
     public Particion firstFit(Proceso Proceso,int tamanioMemoria,int tiempoSeleccion,int tiempoCargaPromedio,int tiempoLiberacion) {
@@ -42,7 +44,7 @@ public class AsignacionMemoria {
     return null; // No se encontro una particion adecuada
 }
 */
-
+/* 
 public Particion firstFit(List<Particion> listaParticiones, Proceso proceso, int tamanioMemoria, int tiempoSeleccion, int tiempoCargaPromedio, int tiempoLiberacion) {
     System.out.println("Buscando una particion adecuada para el proceso:");
   //  System.out.println("Tamano del proceso: " + proceso.getTamanio());
@@ -103,6 +105,89 @@ public Particion firstFit(List<Particion> listaParticiones, Proceso proceso, int
     System.out.println("No se encontro una particion adecuada para el proceso.");
     return null; // No se encontro una particion adecuada
 }
+    */
+    public Particion firstFit(List<Particion> listaParticiones, Proceso proceso, int tamanioMemoria, int tiempoSeleccion, int tiempoCargaPromedio, int tiempoLiberacion) {
+        // Mostrar todas las particiones disponibles
+        for (Particion particion : listaParticiones) {
+            System.out.println("Particiones disponibles: [" + particion + "]");
+        }
+    
+        int i = 0;
+        boolean carga = true;
+    
+        // Iterar sobre las particiones disponibles para encontrar la primera que sirva
+        while (carga && i < listaParticiones.size()) {
+            Particion particion = listaParticiones.get(i);
+            
+            // Verificar si la partición está libre y tiene suficiente tamaño
+            if (particion.getEstado() && particion.getTamanio() >= proceso.getTamanio()) {
+                // Se encontró una partición que puede acomodar el proceso
+                carga = false; // Detener la búsqueda ya que hemos encontrado una partición
+                
+                // SITUACIÓN 1: El tamaño de la partición es exactamente igual al del proceso
+                if (particion.getTamanio() == proceso.getTamanio()) {
+                    // Inicializamos la posición Y de la partición
+                    int ejeY = 0;
+                    for (Particion p : listaParticiones) {
+                        if (p.getEstado() && p == listaParticiones.get(listaParticiones.size() - 1)) {
+                            break;
+                        }
+                        if (p == particion) {
+                            break;
+                        }
+                        ejeY += p.getTamanio();
+                    }
+    
+                    int tiempoInicio = tiempoCargaPromedio + tiempoSeleccion;
+                   // Particion particionX = new Particion(false, tiempoInicio, tiempoInicio + proceso.getDuracion() + tiempoLiberacion, proceso.getTamanio(), ejeY, proceso.getID());
+                   Particion particionX = new Particion(i, tiempoInicio, tamanioMemoria, carga, i);    
+                   System.out.println("El trabajo " + proceso.getNombre() + " encontró una partición"); 
+
+                    System.out.println("El trabajo " + proceso.getNombre() + " encontró una partición");
+                    System.out.println(particionX);
+    
+                    // Agregar la nueva partición a la lista
+                    listaParticiones.add(listaParticiones.indexOf(particion), particionX);
+                    // Eliminar la partición original
+                    listaParticiones.remove(particion);
+    
+                // SITUACIÓN 2: La partición es mayor que el tamaño del proceso
+                } else if (particion.getTamanio() > proceso.getTamanio()) {
+                    // Inicializamos la posición Y de la partición
+                    int ejeY = 0;
+                    for (Particion p : listaParticiones) {
+                        if (p.getEstado() && p == listaParticiones.get(listaParticiones.size() - 1)) {
+                            break;
+                        }
+                        if (p == particion) {
+                            break;
+                        }
+                        ejeY += p.getTamanio();
+                    }
+    
+                    int tiempoInicio = tiempoCargaPromedio + tiempoSeleccion;
+                  //  Particion particionX = new Particion(i, tiempoInicio, proceso.getTamanio() + proceso.getDuracion() + tiempoLiberacion, proceso.getTamanio(),);
+                     Particion particionX = new Particion(i, tiempoInicio, tamanioMemoria, carga, i);    
+                    System.out.println("El trabajo " + proceso.getNombre() + " encontró una partición");
+                    
+                    // Agregar la nueva partición que toma el tamaño del proceso
+                    listaParticiones.add(listaParticiones.indexOf(particion) + 1, particionX);
+    
+                    // Crear la partición sobrante (libre)
+                    Particion particionSobrante = new Particion(-1, -1, particion.getTamanio() - proceso.getTamanio(), carga, -1);
+                    listaParticiones.add(listaParticiones.indexOf(particion) + 2, particionSobrante);
+    
+                    // Eliminar la partición original
+                    listaParticiones.remove(particion);
+                }
+            }
+            i++; // Incrementar el índice para verificar la siguiente partición
+        }
+    
+        // Retornar la partición encontrada o null si no se encontró ninguna
+        return !carga ? listaParticiones.get(i - 1) : null;
+    }
+    
 
     public Particion bestFit(List<Particion>listaParticiones,Proceso proceso, int tamanioMemoria, int tiempoSeleccion, int tiempoCargaPromedio, int tiempoLiberacion) {
         Particion mejorParticion = null;
